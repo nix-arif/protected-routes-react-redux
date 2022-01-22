@@ -1,4 +1,4 @@
-import { Axios } from "axios";
+import Axios from "axios";
 import {
   USER_ISAUTHENTICATED_FAILURE,
   USER_ISAUTHENTICATED_REQUEST,
@@ -25,8 +25,15 @@ const userIsAuthenticatedFailure = (error) => {
   };
 };
 
-export const fetchUserIsAuthenticated = (result) => {
+export const fetchUserIsAuthenticated = () => {
   return function (dispatch) {
-    Axios.post("/isAuthed").then().catch();
+    dispatch(userIsAuthenticatedRequest());
+    Axios.post("/login")
+      .then((response) => {
+        dispatch(userIsAuthenticatedSuccess(response.data.isAuthed));
+      })
+      .catch((error) => {
+        dispatch(userIsAuthenticatedFailure(error));
+      });
   };
 };
